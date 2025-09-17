@@ -1,7 +1,7 @@
 # Custom Local Startpage
 
 ## This is my Flask-hosted local startpage for my Arch Linux device that I use for Floorp (Firefox fork). Always a continuous WIP.
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/d99396ac-1653-4d1f-ab86-3aece3dfb29f" />
+https://github.com/user-attachments/assets/b563a6f9-9a55-40e0-a35c-427fe364cc82
 
 ## Notes:
 ### Weather widget:
