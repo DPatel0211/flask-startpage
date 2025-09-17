@@ -4,6 +4,9 @@
 https://github.com/user-attachments/assets/db6d5fa5-7245-409c-9e63-5726125de61d
 
 ## Notes:
+### Installation:
+- This startpage template can be installed by simply cloning the repository or downloading it as a ZIP file.
+
 ### Weather widget:
 - The weather widget is maintained w/ the OpenWeatherMaps Free API, getting an API key & figuring out your location formatting for the widget/appropriate icons is explained when creating an account and generating a new API key: https://openweathermap.org/api
 - This is all in `script.js`, your location can then be manually typed in `index.html` (does not impact API call).
