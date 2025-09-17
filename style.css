@@ -1,0 +1,568 @@
+:root {
+    --black: #000000;
+    --dark-grey: #f8f9fa;
+    --medium-grey: #e9ecef;
+    --light-grey: #6c757d;
+    --off-white: #212529;
+    --white: #000000;
+    --font-main: 'Cozette', monospace;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-main);
+    background-color: #ffffff;
+    color: var(--black);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("wallpaper_white.jpg") no-repeat center center fixed;
+    background-size: cover;
+    z-index: -1;
+    opacity: 0;
+    animation: fadeInWallpaper 2s ease-in-out forwards;
+}
+
+@keyframes fadeInWallpaper {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header h1 {
+    font-size: 3rem;
+    letter-spacing: 4px;
+    margin-bottom: 1rem;
+    opacity: 0;
+    transform: translateY(-20px);
+    color: var(--black);
+}
+
+.time-display {
+    font-size: 5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    opacity: 0;
+    color: var(--black);
+}
+
+.date-display {
+    font-size: 1.5rem;
+    color: var(--light-grey);
+    margin-bottom: 2rem;
+    opacity: 0;
+}
+
+.weather-widget {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--medium-grey);
+    max-width: 260px;
+    opacity: 0;
+    transform: translateY(10px);
+    z-index: 10;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.weather-widget:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.weather-content {
+    display: flex;
+    align-items: center;
+}
+
+.weather-icon {
+    margin-right: 1rem;
+}
+
+.weather-icon img {
+    width: 40px;
+    height: 40px;
+    filter: grayscale(100%);
+}
+
+.weather-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.weather-temp {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.2rem;
+    color: var(--black);
+}
+
+.weather-description {
+    font-size: 0.9rem;
+    color: var(--light-grey);
+    margin-bottom: 0.2rem;
+    text-transform: capitalize;
+}
+
+.weather-location {
+    font-size: 0.8rem;
+    color: var(--light-grey);
+}
+
+.search-container {
+    margin: 2rem auto;
+    max-width: 600px;
+    opacity: 0;
+    position: relative;
+    z-index: 100;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.search-container:hover {
+    transform: translateY(-5px);
+}
+
+.search-container:hover .search-form {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Suggestions dropdown container */
+.suggestions-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+    border: 1px solid var(--medium-grey);
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1001;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0.95;
+    
+    /* Animation properties */
+    transform: translateY(-10px);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    visibility: hidden;
+}
+
+/* Enhanced shadow for suggestions when search container is hovered */
+.search-container:hover .suggestions-container.show {
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1002;
+}
+
+/* Show state for dropdown */
+.suggestions-container.show {
+    transform: translateY(0);
+    visibility: visible;
+}
+
+/* Hide state for dropdown */
+.suggestions-container.hide {
+    transform: translateY(-5px);
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Individual suggestion items */
+.suggestion-item {
+    padding: 0.75rem 1rem;
+    color: var(--light-grey);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: var(--font-main);
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(233, 236, 239, 0.5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    
+    /* Initial state for stagger animation */
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+/* Animate individual suggestions in */
+.suggestion-item.animate-in {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+    border-radius: 0 0 8px 8px;
+}
+
+.suggestion-item:hover,
+.suggestion-item.selected {
+    background-color: var(--medium-grey);
+    color: var(--black);
+}
+
+/* When suggestions are visible, remove bottom border radius */
+.search-container:has(.suggestions-container.show) .search-form {
+    border-radius: 8px 8px 0 0;
+}
+
+/* Custom scrollbar for suggestions dropdown */
+.suggestions-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.suggestions-container::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+.suggestions-container::-webkit-scrollbar-thumb {
+    background: var(--medium-grey);
+    border-radius: 3px;
+}
+
+.suggestions-container::-webkit-scrollbar-thumb:hover {
+    background: var(--light-grey);
+}
+
+.search-form {
+    display: flex;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--medium-grey);
+    transition: border-radius 0.15s ease;
+}
+
+.search-input {
+    flex: 1;
+    padding: 1rem;
+    background-color: transparent;
+    border: none;
+    color: var(--black);
+    font-family: var(--font-main);
+    font-size: 1rem;
+    outline: none;
+    border-radius: 8px;
+}
+
+.search-input::placeholder {
+    color: var(--light-grey);
+}
+
+.search-button {
+    display: none;
+}
+
+.search-button:hover {
+    background-color: var(--light-grey);
+    color: var(--white);
+}
+
+.keyboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 2rem auto;
+}
+
+.key-section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--medium-grey);
+    transition: transform 0.3s, box-shadow 0.3s;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.key-section:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.key-section h3 {
+    color: var(--black);
+    font-size: 1rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    padding-left: 0.5rem;
+}
+
+.key-section h3::before {
+    content: "";
+    color: var(--light-grey);
+    margin-right: 0;
+}
+
+.key-links {
+    list-style: none;
+}
+
+.key-links li {
+    margin-bottom: 0.6rem;
+    position: relative;
+    padding-left: 1.2rem;
+}
+
+.key-links li::before {
+    content: "├── ";
+    color: var(--light-grey);
+    position: absolute;
+    left: -0.5rem;
+}
+
+.key-links li:last-child::before {
+    content: "└── ";
+}
+
+.key-links a {
+    display: flex;
+    align-items: center;
+    color: var(--light-grey);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.key-links a:hover {
+    color: var(--black);
+}
+
+.key-links .icon {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    display: inline-block;
+    vertical-align: middle;
+    filter: invert(30%);
+    transition: filter 0.3s;
+}
+
+.key-links a:hover .icon {
+    filter: invert(0%);
+}
+
+.footer {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--light-grey);
+    font-size: 0.9rem;
+    opacity: 0;
+}
+
+#vanta-dim {
+  display: none;
+}
+
+/* Rockets scoreboard widget styles */
+.rockets-widget {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--medium-grey);
+    max-width: 250px;
+    opacity: 0;
+    transform: translateY(10px);
+    z-index: 10;
+    transition: height 0.3s ease, width 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.rockets-widget:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+#rockets-game-container {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.rockets-widget-title {
+    font-size: 0.9rem;
+    color: var(--black);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.rockets-widget-title img {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
+    filter: grayscale(100%);
+}
+
+.game-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    gap: 10px;
+}
+
+.team-info {
+    display: flex;
+    align-items: center;
+    width: 45%;
+    position: relative;
+}
+
+.team-logo {
+    width: 24px;
+    height: 24px;
+    filter: grayscale(100%);
+    margin-right: 0.5rem;
+}
+
+.team-details {
+    display: flex;
+    flex-direction: column;
+    margin-right: 0.5rem;
+}
+
+.team-name {
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--black);
+}
+
+.team-location {
+    font-size: 0.7rem;
+    color: var(--light-grey);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.score {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-left: auto;
+    color: var(--black);
+}
+
+.game-status {
+    font-size: 0.8rem;
+    color: var(--light-grey);
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+.game-date, .game-time {
+    font-size: 0.7rem;
+    color: var(--light-grey);
+    margin-top: 0.3rem;
+    text-align: center;
+}
+
+.loading, .error-message {
+    color: var(--light-grey);
+    font-size: 0.8rem;
+    text-align: center;
+    padding: 0.5rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .keyboard {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+
+    .time-display {
+        font-size: 3rem;
+    }
+
+    .header h1 {
+        font-size: 2rem;
+    }
+    
+    .weather-widget {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin: 0 auto 2rem auto;
+    }
+    
+    .rockets-widget {
+        position: relative;
+        bottom: 0;
+        left: 0;
+        margin: 2rem auto 0 auto;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--medium-grey);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--light-grey);
+}
+
+/* Font face definition */
+@font-face {
+    font-family: 'JetBrains Maple Mono';
+    src: url('fonts/JetBrainsMapleMono-Regular.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
